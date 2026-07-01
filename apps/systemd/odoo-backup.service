@@ -1,0 +1,11 @@
+[Unit]
+Description=Sauvegarde de la stack Odoo (pg_dump + filestore)
+
+[Service]
+Type=oneshot
+# Équivalent systemd de l'entrée cron (voir apps/backup.cron).
+# En mode utilisateur (sans root), on écrit dans des dossiers accessibles.
+# En root, retirer ces deux lignes pour utiliser /backup et /var/log/backup.log.
+Environment=BACKUP_DIR=%h/odoo-backups
+Environment=LOG_FILE=%h/odoo-backups/backup.log
+ExecStart=/home/magreyuptown/Projects/DevCloud/apps/backup.sh

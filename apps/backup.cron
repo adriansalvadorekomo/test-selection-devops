@@ -1,0 +1,6 @@
+# Sauvegarde Odoo — tous les jours à 02h00
+# Installation (crontab root, car /backup et /var/log/backup.log demandent les droits root) :
+#   sudo crontab apps/backup.cron
+# Vérification :
+#   sudo crontab -l
+0 2 * * * /home/magreyuptown/Projects/DevCloud/apps/backup.sh >> /var/log/backup.log 2>&1
