@@ -37,7 +37,12 @@ tar -xzf backup_YYYYMMDD_HHMMSS.tar.gz
 
 ```bash
 docker compose up -d db
-# Attendre que PostgreSQL soit prêt (~10 s), puis recréer la base
+# Attendre que PostgreSQL soit prêt
+until docker exec odoo-db pg_isready -U ${DB_USER}; do sleep 1; done
+
+# POSTGRES_DB recrée automatiquement une base ${DB_NAME} vide au démarrage :
+# on la supprime puis on la recrée avant de rejouer le dump.
+docker exec odoo-db dropdb -U ${DB_USER} --if-exists ${DB_NAME}
 docker exec odoo-db createdb -U ${DB_USER} ${DB_NAME}
 docker exec -i odoo-db psql -U ${DB_USER} -d ${DB_NAME} < /backup/dump.sql
 ```
@@ -48,6 +53,8 @@ docker exec -i odoo-db psql -U ${DB_USER} -d ${DB_NAME} < /backup/dump.sql
 docker compose up -d odoo
 # Attendre que le conteneur Odoo soit prêt
 docker cp /backup/filestore odoo-app:/var/lib/odoo/
+# Rétablir le propriétaire (docker cp copie en root)
+docker exec -u root odoo-app chown -R odoo:odoo /var/lib/odoo/filestore
 ```
 
 ### 6. Redémarrer la stack

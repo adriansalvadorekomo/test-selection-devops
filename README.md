@@ -28,7 +28,22 @@ cp .env.example .env     # éditer les mots de passe si nécessaire
 docker compose up -d
 ```
 
-Odoo est accessible sur http://localhost:8069 ou http://erp.local (ajouter `127.0.0.1 erp.local` dans `/etc/hosts`).
+### Initialisation de la base (premier démarrage)
+
+La base `${DB_NAME}` est créée vide par PostgreSQL : il faut l'initialiser avec
+Odoo et installer le module Ventes (avec données de démonstration) :
+
+```bash
+docker compose stop odoo
+docker compose run --rm odoo odoo -i base,sale -d odoo_db --stop-after-init
+docker compose start odoo
+```
+
+> Alternative : laisser la base vide et la créer via l'assistant web
+> `http://localhost:8069/web/database/manager`.
+
+Odoo est ensuite accessible sur http://localhost:8069 ou http://erp.local
+(ajouter `127.0.0.1 erp.local` dans `/etc/hosts`).
 
 ## Sauvegarde
 
@@ -38,6 +53,24 @@ cd apps
 ```
 
 L'archive est créée dans `/backup/backup_YYYYMMDD_HHMMSS.tar.gz`.
+Le chemin de sortie et le log sont surchargeables : `BACKUP_DIR` et `LOG_FILE`.
+
+### Automatisation (backup nocturne à 02h00)
+
+**Via cron** (production, en root car `/backup` et `/var/log` requièrent les droits root) :
+
+```bash
+sudo crontab apps/backup.cron   # entrée : 0 2 * * * .../backup.sh
+```
+
+**Via systemd** (systèmes sans cron) — unités versionnées dans `apps/systemd/` :
+
+```bash
+cp apps/systemd/odoo-backup.* ~/.config/systemd/user/
+systemctl --user daemon-reload
+systemctl --user enable --now odoo-backup.timer
+systemctl --user list-timers odoo-backup.timer   # vérifier la prochaine exécution
+```
 
 ## Restauration après crash
 
@@ -50,8 +83,12 @@ Voir `docs/restauration.md` pour le runbook complet.
 │   ├── docker-compose.yml
 │   ├── .env.example
 │   ├── backup.sh
-│   └── nginx/
-│       └── odoo.conf
+│   ├── backup.cron
+│   ├── nginx/
+│   │   └── odoo.conf
+│   └── systemd/
+│       ├── odoo-backup.service
+│       └── odoo-backup.timer
 ├── docs/
 │   ├── restauration.md
 │   └── journal-ia.md
