@@ -10,10 +10,10 @@ if [ -f "${SCRIPT_DIR}/.env" ]; then
     set +a
 fi
 
-BACKUP_DIR=/backup
+BACKUP_DIR="${BACKUP_DIR:-/backup}"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 BACKUP_FILE="${BACKUP_DIR}/backup_${TIMESTAMP}.tar.gz"
-LOG_FILE=/var/log/backup.log
+LOG_FILE="${LOG_FILE:-/var/log/backup.log}"
 STAGING=$(mktemp -d)
 
 mkdir -p "${BACKUP_DIR}"
