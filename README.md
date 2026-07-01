@@ -2,6 +2,16 @@
 
 Stack Odoo 17 + PostgreSQL 15 + Nginx conteneurisée avec Docker Compose.
 
+## Informations du candidat
+
+| Champ | Valeur |
+|---|---|
+| Nom & Prénom | Adrian Salvador Ekomo Mesi Obono |
+| École / Université | ESPRIT |
+| Évaluateur | ______________________________ |
+| Date du test | 01/07/2026 |
+| Heure de début | 07:00 |
+
 ## Prérequis
 
 - Docker Engine v24+

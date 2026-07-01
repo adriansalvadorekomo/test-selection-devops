@@ -12,7 +12,7 @@ Un fichier docker-compose.yml complet avec 3 services, volumes nommés et résea
 J'ai ajusté les variables d'environnement pour utiliser le fichier .env et ajouté les dépendances entre services.
 
 **Pourquoi :**
-La séparation des secrets dans .evn est obligatoire pour la sécurité et la notation.
+La séparation des secrets dans .env est obligatoire pour la sécurité et la notation.
 
 ---
 
