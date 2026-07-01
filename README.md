@@ -35,7 +35,7 @@ Odoo et installer le module Ventes (avec données de démonstration) :
 
 ```bash
 docker compose stop odoo
-docker compose run --rm odoo odoo -i base,sale -d odoo_db --stop-after-init
+docker compose run --rm odoo odoo -i base,sale_management -d odoo_db --stop-after-init
 docker compose start odoo
 ```
 
